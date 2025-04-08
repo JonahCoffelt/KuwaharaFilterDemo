@@ -32,8 +32,8 @@ scene.add(node)
 
 # Kuwahara tools
 kuwahara_shader = bsk.Shader(engine, 'shader/frame.vert', 'shader/kuwahara.frag')
-kuwahara_renderer = bsk.Framebuffer(engine, kuwahara_shader, scale=1)
-temp_buffer = bsk.Framebuffer(engine, scale=1)
+kuwahara_renderer = bsk.Framebuffer(engine, kuwahara_shader, scale=.8)
+temp_buffer = bsk.Framebuffer(engine, scale=.8)
 
 while engine.running:
     scene.update(render=False)
