@@ -9,6 +9,7 @@ uniform sampler2D screenTexture;
 uniform vec2 viewportDimensions;
 
 const int size = 10;
+const int skip = 3;
 
 
 float grayscale(vec3 color) {
@@ -19,13 +20,13 @@ float grayscale(vec3 color) {
 vec3 quadrantMean (vec2 offset, int size) {
     vec3 total = vec3(0.0);
 
-    for (int x = 0; x < size; x++) {
-        for (int y = 0; y < size; y++) {
+    for (int x = 0; x < size; x+=skip) {
+        for (int y = 0; y < size; y+=skip) {
             total += texture(screenTexture, uv + vec2(x, y) * offset).rgb;
         }
     }
 
-    total /= size * size;
+    total /= size * size / skip / skip;
     return total;
 }
 
@@ -34,14 +35,14 @@ float quadrantStandardDeviation (vec3 color, vec2 offset, int size) {
     float mean = grayscale(color);
 
     float total = 0.0;
-    for (int x = 0; x < size; x++) {
-        for (int y = 0; y < size; y++) {
+    for (int x = 0; x < size; x+=skip) {
+        for (int y = 0; y < size; y+=skip) {
             float diff = grayscale(texture(screenTexture, uv + vec2(x, y) * offset).rgb) - mean;
             total += diff * diff;
         }
     }
 
-    total /= size * size;
+    total /= size * size / skip / skip;
     total = sqrt(total);
     return total;
 }

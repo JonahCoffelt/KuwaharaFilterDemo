@@ -2,7 +2,6 @@ import basilisk as bsk
 
 engine = bsk.Engine(title=None)
 scene = bsk.Scene(engine)
-scene.sky = None
 
 # Load meshes
 sphere_mesh = bsk.Mesh('models/sphere.obj')
@@ -33,7 +32,8 @@ scene.add(node)
 
 # Kuwahara tools
 kuwahara_shader = bsk.Shader(engine, 'shader/frame.vert', 'shader/kuwahara.frag')
-kuwahara_renderer = bsk.Framebuffer(engine, kuwahara_shader)
+kuwahara_renderer = bsk.Framebuffer(engine, kuwahara_shader, scale=.75)
+temp_buffer = bsk.Framebuffer(engine, scale=.75)
 
 while engine.running:
     scene.update(render=False)
