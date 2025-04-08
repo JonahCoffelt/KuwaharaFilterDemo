@@ -1,7 +1,8 @@
 import basilisk as bsk
 
-engine = bsk.Engine()
+engine = bsk.Engine(title=None)
 scene = bsk.Scene(engine)
+scene.sky = None
 
 # Load meshes
 sphere_mesh = bsk.Mesh('models/sphere.obj')
@@ -22,21 +23,22 @@ mud       = bsk.Material(texture=mud_albedo, normal=mud_normal, roughness=.5, sp
 cloth     = bsk.Material(texture=cloth_albedo, normal=cloth_normal, roughness=.8, specular=1.5, clearcoat=.8, clearcoat_gloss=.6)
 emissive  = bsk.Material(emissive_color=(500, 150, 150))
 landscape = bsk.Material(texture=landscape)
+zach = bsk.Material(texture=bsk.Image('textures/zach.png'))
+bear = bsk.Material(texture=bsk.Image('textures/bear.png'))
+
 
 # Add Nodes
-node = bsk.Node(material=landscape, rotation=(0, 3.14, 0))
+node = bsk.Node(material=bear, rotation=(0, 3.14, 0), scale=(5, 5, 8))
 scene.add(node)
 
 # Kuwahara tools
 kuwahara_shader = bsk.Shader(engine, 'shader/frame.vert', 'shader/kuwahara.frag')
 kuwahara_renderer = bsk.Framebuffer(engine, kuwahara_shader)
-kuwahara_fbo = bsk.Framebuffer(engine)
 
 while engine.running:
-    scene.update()
+    scene.update(render=False)
 
-    kuwahara_renderer.bind(scene.frame.output_buffer.texture, 'screenTexture', 0)
-    kuwahara_renderer.render(kuwahara_fbo, auto_bind=False)
-    kuwahara_fbo.render()
+    scene.render(kuwahara_renderer)
+    kuwahara_renderer.render()
 
     engine.update(render=False)
